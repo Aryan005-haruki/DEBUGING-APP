@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+        android:maxSdkVersion="32" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@android:drawable/sym_def_app_icon"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HealthChecker"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        
+        <!-- Disclaimer Activity (Launcher) -->
+        <activity
+            android:name=".ui.disclaimer.DisclaimerActivity"
+            android:exported="true"
+            android:theme="@style/Theme.HealthChecker.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Home Activity -->
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false" />
+        
+        <!-- Website Input Activity -->
+        <activity
+            android:name=".ui.input.WebsiteInputActivity"
+            android:exported="false" />
+        
+        <!-- APK Upload Activity -->
+        <activity
+            android:name=".ui.input.ApkUploadActivity"
+            android:exported="false" />
+        
+        <!-- Loading Activity -->
+        <activity
+            android:name=".ui.loading.LoadingActivity"
+            android:exported="false" />
+        
+        <!-- Report Activity -->
+        <activity
+            android:name=".ui.report.ReportActivity"
+            android:exported="false" />
+        
+        <!-- Fix Suggestion Activity -->
+        <activity
+            android:name=".ui.fixsuggestion.FixSuggestionActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

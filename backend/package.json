@@ -1,0 +1,39 @@
+{
+  "name": "health-checker-backend",
+  "version": "1.0.0",
+  "description": "Backend API for App & Website Health Checker",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "health-checker",
+    "lighthouse",
+    "apk-analysis"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "adbkit-apkreader": "^3.2.0",
+    "axios": "^1.6.2",
+    "broken-link-checker": "^0.7.8",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "mongodb": "^7.0.0",
+    "multer": "^1.4.5-lts.1",
+    "puppeteer": "^24.34.0",
+    "robots-parser": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "commonjs"
+}

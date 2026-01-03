@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Health Checker</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">App \u0026 Website Health Checker</string>
+    <string name="home_subtitle">Analyze your apps and websites for free</string>
+    <string name="analyze_website">Analyze Website</string>
+    <string name="analyze_apk">Analyze Android APK</string>
+    <string name="website_desc">Check performance, SEO, accessibility, and security</string>
+    <string name="apk_desc">Static analysis for permissions, SDK, and size</string>
+    
+    <!-- Disclaimer -->
+    <string name="disclaimer_title">Important Disclaimer</string>
+    <string name="disclaimer_text">
+        This tool is provided FREE for educational and improvement purposes only.\n\n
+        
+        📌 Terms of Use:\n
+        • Only analyze apps and websites YOU OWN or have permission to analyze\n
+        • No hacking, penetration testing, or unauthorized access\n
+        • Analysis is limited to publicly available information and static code inspection\n
+        • Results are for guidance only and may not be 100% accurate\n\n
+        
+        ⚖️ Privacy:\n
+        • We do not store your websites or APK files\n
+        • Analysis is performed in real-time and data is not retained\n
+        • Your privacy is important to us\n\n
+        
+        🔒 Security:\n
+        • All analysis uses FREE or free-tier tools only\n
+        • No malicious activities or security exploits\n
+        • Use responsibly and ethically\n\n
+        
+        By continuing, you agree to these terms and confirm that you have the right to analyze the content you submit.
+    </string>
+    <string name="i_agree">I understand and agree to the terms</string>
+    <string name="accept_continue">Accept \u0026 Continue</string>
+    
+    <!-- Input Screens -->
+    <string name="enter_url">Enter Website URL</string>
+    <string name="url_hint">https://example.com</string>
+    <string name="analyze">Analyze</string>
+    <string name="select_apk">Select APK File</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="tap_to_select">Tap to select an APK file</string>
+    
+    <!-- Loading -->
+    <string name="analyzing">Analyzing…</string>
+    <string name="please_wait">Please wait, this may take up to 2 minutes</string>
+    
+    <!-- Report -->
+    <string name="analysis_report">Analysis Report</string>
+    <string name="critical_issues">Critical</string>
+    <string name="warnings">Warnings</string>
+    <string name="passed">Passed</string>
+    <string name="all_issues">All</string>
+    <string name="view_fix">View Fix</string>
+    
+    
+    <!-- Fix Suggestion -->
+    <string name="how_to_fix">How to Fix</string>
+    <string name="steps">Steps:</string>
+    <string name="resources">Resources:</string>
+    
+    <!-- Security (Phase 2) -->
+    <string name="security_warning">⚠️ SECURITY WARNING</string>
+    <string name="security_warning_icon">Security Warning Icon</string>
+    <string name="security_warning_message">This website has serious security vulnerabilities that need immediate attention!</string>
+    <string name="security_critical_warning">This website has CRITICAL security issues (Score: %1$d%%, Grade: %2$s)</string>
+    <string name="security_needs_improvement">Security improvements needed (Score: %1$d%%, Grade: %2$s)</string>
+    <string name="security_good">Good security posture (Score: %1$d%%, Grade: %2$s)</string>
+    <string name="view_security_details">→ View Detailed Security Report</string>
+    <string name="security_score_label">Security Score</string>
+    <string name="security_vulnerability">Security Vulnerability</string>
+    <string name="critical_issues_count">%1$d Critical Issues</string>
+    <string name="warning_issues_count">%1$d Warnings</string>
+    
+    <!-- Common -->
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="loading">Loading...</string>
+</resources>

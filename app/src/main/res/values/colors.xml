@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Colors -->
+    <color name="md_theme_light_primary">#6750A4</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#EADDFF</color>
+    <color name="md_theme_light_onPrimaryContainer">#21005D</color>
+    <color name="md_theme_light_secondary">#625B71</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#E8DEF8</color>
+    <color name="md_theme_light_onSecondaryContainer">#1D192B</color>
+    <color name="md_theme_light_tertiary">#7D5260</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFD8E4</color>
+    <color name="md_theme_light_onTertiaryContainer">#31111D</color>
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#F9DEDC</color>
+    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+    <color name="md_theme_light_outline">#79747E</color>
+    <color name="md_theme_light_background">#FFFBFE</color>
+    <color name="md_theme_light_onBackground">#1C1B1F</color>
+    <color name="md_theme_light_surface">#FFFBFE</color>
+    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <color name="md_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#49454F</color>
+
+    <!-- Severity Colors -->
+    <color name="critical_red">#D32F2F</color>
+    <color name="critical_bg">#FFEBEE</color>
+    <color name="warning_orange">#F57C00</color>
+    <color name="warning_bg">#FFF3E0</color>
+    <color name="success_green">#388E3C</color>
+    <color name="success_bg">#E8F5E9</color>
+    
+    <!-- Security Score Colors -->
+    <color name="security_critical">#DC143C</color>      <!-- Crimson Red for F grade -->
+    <color name="security_poor">#FF4500</color>          <!-- Orange Red for D grade -->
+    <color name="security_fair">#FFA500</color>          <!-- Orange for C grade -->
+    <color name="security_good">#32CD32</color>          <!-- Lime Green for B grade -->
+    <color name="security_excellent">#228B22</color>     <!-- Forest Green for A grade -->
+    
+    <color name="security_warning_bg">#FFF9C4</color>    <!-- Light Yellow -->
+    <color name="security_critical_bg">#FFCDD2</color>   <!-- Light Red -->
+    
+    <!-- Common -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
