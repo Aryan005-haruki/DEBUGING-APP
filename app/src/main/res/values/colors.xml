@@ -18,8 +18,8 @@
     <color name="md_theme_light_errorContainer">#F9DEDC</color>
     <color name="md_theme_light_onErrorContainer">#410E0B</color>
     <color name="md_theme_light_outline">#79747E</color>
-    <color name="md_theme_light_background">#FFFBFE</color>
-    <color name="md_theme_light_onBackground">#1C1B1F</color>
+    <color name="md_theme_light_background">#F8F9FA</color>  <!-- Professional light gray background -->
+    <color name="md_theme_light_onBackground">#1F2937</color>  <!-- Darker text for better contrast -->
     <color name="md_theme_light_surface">#FFFBFE</color>
     <color name="md_theme_light_onSurface">#1C1B1F</color>
     <color name="md_theme_light_surfaceVariant">#E7E0EC</color>
@@ -42,6 +42,51 @@
     
     <color name="security_warning_bg">#FFF9C4</color>    <!-- Light Yellow -->
     <color name="security_critical_bg">#FFCDD2</color>   <!-- Light Red -->
+    
+    <!-- Phase 6: Premium UI Colors (Reference Design) -->
+    <!-- Primary Accent Colors -->
+    <color name="premium_primary">#6366F1</color>        <!-- Indigo -->
+    <color name="premium_primary_light">#818CF8</color>  <!-- Light Indigo -->
+    <color name="premium_accent">#A855F7</color>         <!-- Purple -->
+    <color name="premium_accent_light">#C084FC</color>   <!-- Light Purple -->
+    
+    <!-- Vibrant Status Colors -->
+    <color name="vibrant_success">#00C896</color>        <!-- Teal Green -->
+    <color name="vibrant_warning">#FFB800</color>        <!-- Amber -->
+    <color name="vibrant_critical">#FF4757</color>       <!-- Coral Red -->
+    <color name="vibrant_info">#4A90E2</color>           <!-- Sky Blue -->
+    
+    <!-- Progress Segments -->
+    <color name="progress_excellent">#00C896</color>     <!-- Green segment -->
+    <color name="progress_good">#4A90E2</color>          <!-- Blue segment -->
+    <color name="progress_fair">#FFB800</color>          <!-- Yellow segment -->
+    <color name="progress_poor">#FF4757</color>          <!-- Red segment -->
+    
+    <!-- Badge Colors -->
+    <color name="badge_high">#FF4757</color>             <!-- High priority -->
+    <color name="badge_high_bg">#FFE5E8</color>          <!-- High bg -->
+    <color name="badge_medium">#FFB800</color>           <!-- Medium priority -->
+    <color name="badge_medium_bg">#FFF4E0</color>        <!-- Medium bg -->
+    <color name="badge_low">#00C896</color>              <!-- Low priority -->
+    <color name="badge_low_bg">#E0F9F3</color>           <!-- Low bg -->
+    
+    <!-- Card & Surface Colors -->
+    <color name="card_elevated">#FFFFFF</color>          <!-- Elevated card -->
+    <color name="card_shadow">#1A000000</color>          <!-- Card shadow -->
+    <color name="card_border">#E5E7EB</color>            <!-- Subtle border -->
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#6366F1</color>         <!-- Indigo -->
+    <color name="gradient_middle">#8B5CF6</color>        <!-- Purple -->
+    <color name="gradient_end">#A855F7</color>           <!-- Light Purple -->
+    
+    <color name="gradient_accent_start">#06B6D4</color>  <!-- Cyan -->
+    <color name="gradient_accent_end">#3B82F6</color>    <!-- Blue -->
+    
+    <!-- Text Colors (Premium) -->
+    <color name="text_premium_primary">#111827</color>   <!-- Almost Black -->
+    <color name="text_premium_secondary">#6B7280</color> <!-- Gray -->
+    <color name="text_premium_tertiary">#9CA3AF</color>  <!-- Light Gray -->
     
     <!-- Common -->
     <color name="white">#FFFFFF</color>

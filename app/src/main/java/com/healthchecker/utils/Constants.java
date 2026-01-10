@@ -2,25 +2,38 @@ package com.healthchecker.utils;
 
 public class Constants {
     // ============================================================
-    // API CONFIGURATION - CHOOSE ONE BASED ON YOUR SETUP
+    // API CONFIGURATION - RAILWAY DEPLOYED VERSION
     // ============================================================
 
-    // OPTION 1: For Android Emulator (localhost backend)
-    public static final String BASE_URL = "http://10.0.2.2:3000/api/v1/";
+    // DEPLOYED BACKEND (Railway) - Works from anywhere! 🌍
+    // TODO: Replace with your actual Railway URL after deployment
+    public static final String BASE_URL = "https://YOUR-APP-NAME.up.railway.app/api/v1/";
 
-    // OPTION 2: For Physical Device on same WiFi
-    // Replace with your PC's local IP (run 'ipconfig' in terminal)
+    // INSTRUCTIONS:
+    // 1. Deploy backend to Railway (follow RAILWAY_DEPLOYMENT_GUIDE.md)
+    // 2. Get your Railway public URL from Railway dashboard
+    // 3. Replace "YOUR-APP-NAME.up.railway.app" with your actual URL
+    // 4. Make sure "/api/v1/" is at the end
+    // 5. Save this file
+    // 6. Rebuild app in Android Studio (Build → Rebuild Project)
+
+    // EXAMPLE:
+    // public static final String BASE_URL =
+    // "https://health-checker-backend-production.up.railway.app/api/v1/";
+
+    // ============================================================
+    // BACKUP OPTIONS (Uncomment if needed)
+    // ============================================================
+
+    // For Android Emulator (localhost backend)
+    // public static final String BASE_URL = "http://10.0.2.2:3000/api/v1/";
+
+    // For Physical Device on same WiFi (your PC's IP)
     // public static final String BASE_URL = "http://192.168.0.103:3000/api/v1/";
 
-    // OPTION 3: For deployed backend (Railway, Render, etc.)
-    // public static final String BASE_URL = "https://your-app.railway.app/api/v1/";
-
-    // OPTION 4: For testing with ngrok (temporary public URL)
-    // Install ngrok: https://ngrok.com/download
-    // Run: ngrok http 3000
-    // Copy the https URL here
+    // For Render deployment
     // public static final String BASE_URL =
-    // "https://xxxx-xxx-xxx.ngrok-free.app/api/v1/";
+    // "https://health-checker-api.onrender.com/api/v1/";
 
     // ============================================================
 

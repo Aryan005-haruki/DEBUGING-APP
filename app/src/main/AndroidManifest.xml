@@ -16,15 +16,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         
-        <!-- Disclaimer Activity (Launcher) -->
+        <!-- Main Activity (Fragment-based with Bottom Navigation) - NEW LAUNCHER -->
         <activity
-            android:name=".ui.disclaimer.DisclaimerActivity"
-            android:exported="true"
-            android:theme="@style/Theme.HealthChecker.NoActionBar">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <!-- Disclaimer Activity (OLD LAUNCHER - Now secondary) -->
+        <activity
+            android:name=".ui.disclaimer.DisclaimerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HealthChecker.NoActionBar">
         </activity>
         
         <!-- Home Activity -->

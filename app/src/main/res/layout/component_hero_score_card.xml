@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hero Score Card - Large Overall Score Display -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Overall Health Score"
+            android:textSize="16sp"
+            android:textColor="@color/text_premium_secondary"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Large Circular Progress -->
+        <FrameLayout
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="20dp">
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressHero"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:cpb_background_progressbar_color="#E5E7EB"
+                app:cpb_background_progressbar_width="12dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_color="@color/vibrant_success"
+                app:cpb_progressbar_width="12dp"
+                app:cpb_round_border="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvHeroScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="82"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_premium_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/100"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_premium_tertiary" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Grade Badge -->
+        <TextView
+            android:id="@+id/tvGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Good"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/vibrant_success"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Issues Summary -->
+        <TextView
+            android:id="@+id/tvIssuesSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23 issues found"
+            android:textSize="14sp"
+            android:textColor="@color/text_premium_secondary"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

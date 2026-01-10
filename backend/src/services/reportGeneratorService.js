@@ -4,7 +4,7 @@ const fixSuggestions = require('../utils/fixSuggestions');
  * Generate comprehensive website analysis report
  */
 exports.generateWebsiteReport = (url, analysisResults) => {
-    const { pagespeed, lighthouse, brokenLinks, security } = analysisResults;
+    const { pagespeed, lighthouse, brokenLinks, security, seo, accessibility } = analysisResults;
 
     const categories = [];
     const timestamp = new Date().toISOString();
@@ -81,6 +81,60 @@ exports.generateWebsiteReport = (url, analysisResults) => {
                 description: 'Advanced security scanning could not be performed',
                 impact: 'Some security vulnerabilities may not be detected',
                 fixSuggestion: fixSuggestions.security.overall
+            }]
+        });
+    }
+
+    // SEO Analysis category (Phase 3) - Deep SEO Analysis
+    if (analysisResults.seo) {
+        categories.push(generateSEOAnalysisCategory(analysisResults.seo));
+    } else {
+        categories.push({
+            name: 'SEO Analysis',
+            score: null,
+            issues: [{
+                id: 'seo-analysis-unavailable',
+                severity: 'WARNING',
+                title: 'SEO Analysis Unavailable',
+                description: 'Deep SEO analysis could not be performed',
+                impact: 'Detailed SEO recommendations not available',
+                fixSuggestion: fixSuggestions.seo.overall
+            }]
+        });
+    }
+
+    // Accessibility Compliance category (Phase 4) - WCAG 2.1 AA
+    if (analysisResults.accessibility) {
+        categories.push(generateAccessibilityCategory(analysisResults.accessibility));
+    } else {
+        categories.push({
+            name: 'Accessibility Compliance',
+            score: null,
+            issues: [{
+                id: 'a11y-deep-unavailable',
+                severity: 'WARNING',
+                title: 'Accessibility Analysis Unavailable',
+                description: 'WCAG 2.1 AA compliance check could not be performed',
+                impact: 'Detailed accessibility recommendations not available',
+                fixSuggestion: fixSuggestions.accessibility.overall
+            }]
+        });
+    }
+
+    // Code Quality category (Phase 5) - HTML, CSS, JS, Performance, Compatibility
+    if (analysisResults.codeQuality) {
+        categories.push(generateCodeQualityCategory(analysisResults.codeQuality));
+    } else {
+        categories.push({
+            name: 'Code Quality',
+            score: null,
+            issues: [{
+                id: 'code-quality-unavailable',
+                severity: 'WARNING',
+                title: 'Code Quality Analysis Unavailable',
+                description: 'HTML, CSS, and JavaScript quality analysis could not be performed',
+                impact: 'Code quality issues may not be detected',
+                fixSuggestion: fixSuggestions.codeQuality?.overall || fixSuggestions.performance.overall
             }]
         });
     }
@@ -327,6 +381,112 @@ function generateBrokenLinksCategory(brokenLinksData) {
     };
 }
 
+/**
+ * Generate SEO Analysis category (Phase 3)
+ */
+function generateSEOAnalysisCategory(seoResults) {
+    const issues = [];
+
+    // Map all SEO issues from all analyzers
+    if (seoResults.issues && seoResults.issues.length > 0) {
+        seoResults.issues.forEach((issue, idx) => {
+            // Determine fix suggestion based on category
+            const suggestionKey = getSEOFixSuggestion(issue.category);
+
+            issues.push({
+                id: issue.id || `seo-${idx}`,
+                severity: issue.severity,
+                title: issue.title,
+                description: issue.description,
+                impact: issue.impact,
+                fixSuggestion: issue.fixSuggestion || suggestionKey
+            });
+        });
+    }
+
+    return {
+        name: 'SEO Analysis',
+        score: seoResults.score || 0,
+        issues,
+        summary: {
+            grade: seoResults.grade,
+            totalIssues: seoResults.summary?.totalIssues || 0,
+            critical: seoResults.summary?.critical || 0,
+            warning: seoResults.summary?.warning || 0
+        }
+    };
+}
+
+/**
+ * Get fix suggestion for SEO categories
+ */
+function getSEOFixSuggestion(category) {
+    const mapping = {
+        'SEO - Meta Tags': fixSuggestions.seo.metaTags,
+        'SEO - Content': fixSuggestions.seo.content,
+        'SEO - Structure': fixSuggestions.seo.structure,
+        'SEO - Schema': fixSuggestions.seo.schema,
+        'SEO - Mobile': fixSuggestions.seo.mobile,
+        'SEO - Duplicates': fixSuggestions.seo.duplicates
+    };
+
+    return mapping[category] || fixSuggestions.seo.overall;
+}
+
+/**
+ * Generate Accessibility Compliance category (Phase 4)
+ */
+function generateAccessibilityCategory(a11yResults) {
+    const issues = [];
+
+    // Map all accessibility issues from all analyzers
+    if (a11yResults.issues && a11yResults.issues.length > 0) {
+        a11yResults.issues.forEach((issue, idx) => {
+            // Use issue's own fixSuggestion or get from category
+            const suggestionKey = getAccessibilityFixSuggestion(issue.category);
+
+            issues.push({
+                id: issue.id || `a11y-${idx}`,
+                severity: issue.severity,
+                title: issue.title,
+                description: issue.description,
+                impact: issue.impact,
+                fixSuggestion: issue.fixSuggestion || suggestionKey
+            });
+        });
+    }
+
+    return {
+        name: 'Accessibility Compliance',
+        score: a11yResults.score || 0,
+        issues,
+        summary: {
+            complianceLevel: a11yResults.complianceLevel,
+            totalIssues: a11yResults.summary?.totalIssues || 0,
+            critical: a11yResults.summary?.critical || 0,
+            warning: a11yResults.summary?.warning || 0
+        }
+    };
+}
+
+/**
+ * Get fix suggestion for accessibility categories
+ */
+function getAccessibilityFixSuggestion(category) {
+    const mapping = {
+        'Accessibility - Perceivable': fixSuggestions.accessibility.perceivable,
+        'Accessibility - Operable': fixSuggestions.accessibility.operable,
+        'Accessibility - Understandable': fixSuggestions.accessibility.understandable,
+        'Accessibility - Robust': fixSuggestions.accessibility.robust,
+        'Accessibility - Color Contrast': fixSuggestions.accessibility.colorContrast,
+        'Accessibility - Keyboard': fixSuggestions.accessibility.keyboard,
+        'Accessibility - ARIA': fixSuggestions.accessibility.aria,
+        'Accessibility - Screen Reader': fixSuggestions.accessibility.screenReader
+    };
+
+    return mapping[category] || fixSuggestions.accessibility.overall;
+}
+
 // Helper functions for APK categories
 
 function generateSizeCategory(apkData) {
@@ -390,6 +550,46 @@ function generateSdkCategory(apkData) {
     return {
         name: 'SDK Versions',
         issues
+    };
+}
+
+/**
+ * Generate Code Quality category (Phase 5)
+ */
+function generateCodeQualityCategory(codeQualityResults) {
+    const issues = [];
+
+    // Map all code quality issues from all analyzers
+    if (codeQualityResults.issues && codeQualityResults.issues.length > 0) {
+        codeQualityResults.issues.forEach((issue, idx) => {
+            issues.push({
+                id: issue.id || `quality-${idx}`,
+                severity: issue.severity,
+                title: issue.title,
+                description: issue.description,
+                impact: issue.impact,
+                fixSuggestion: issue.fixSuggestion || fixSuggestions.performance.overall
+            });
+        });
+    }
+
+    return {
+        name: 'Code Quality',
+        score: codeQualityResults.score || 0,
+        issues,
+        summary: {
+            grade: codeQualityResults.grade,
+            totalIssues: codeQualityResults.summary?.totalIssues || 0,
+            critical: codeQualityResults.summary?.critical || 0,
+            warning: codeQualityResults.summary?.warning || 0,
+            categories: {
+                html: codeQualityResults.categories?.html?.score,
+                css: codeQualityResults.categories?.css?.score,
+                javascript: codeQualityResults.categories?.javascript?.score,
+                performance: codeQualityResults.categories?.performance?.score,
+                compatibility: codeQualityResults.categories?.compatibility?.score
+            }
+        }
     };
 }
 

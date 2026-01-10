@@ -3,6 +3,7 @@ package com.healthchecker.ui.report;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,6 +62,8 @@ public class ReportActivity extends AppCompatActivity implements IssueAdapter.On
         chipGroupFilters = findViewById(R.id.chipGroupFilters);
         recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
         recyclerViewIssues = findViewById(R.id.recyclerViewIssues);
+
+        // Security banner is optional (may not be in new layout)
         securityWarningBanner = findViewById(R.id.securityWarningBanner);
 
         // Setup RecyclerViews
@@ -102,6 +105,9 @@ public class ReportActivity extends AppCompatActivity implements IssueAdapter.On
 
             // Display security warning if applicable (Phase 2)
             displaySecurityWarning(reportData);
+
+            // Initial load of issues
+            updateIssuesList();
         }
     }
 
@@ -148,9 +154,8 @@ public class ReportActivity extends AppCompatActivity implements IssueAdapter.On
                     MaterialButton btnViewDetails = securityWarningBanner.findViewById(R.id.btnViewSecurityDetails);
                     if (btnViewDetails != null) {
                         btnViewDetails.setOnClickListener(v -> {
-                            // Scroll to security category or filter to show only security issues
-                            // For now, just scroll to top of issues list
-                            recyclerViewIssues.smoothScrollToPosition(0);
+                            // Show detailed security dialog
+                            showSecurityDetailsDialog(category);
                         });
                     }
                 }
@@ -186,6 +191,68 @@ public class ReportActivity extends AppCompatActivity implements IssueAdapter.On
         Intent intent = new Intent(this, FixSuggestionActivity.class);
         intent.putExtra(Constants.EXTRA_ISSUE_DATA, issue);
         startActivity(intent);
+    }
+
+    /**
+     * Show detailed security breakdown dialog
+     */
+    private void showSecurityDetailsDialog(AnalysisResponse.Category securityCategory) {
+        // Create dialog
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.dialog_security_details, null);
+        builder.setView(dialogView);
+
+        // Get views
+        TextView tvOverallScore = dialogView.findViewById(R.id.tvOverallScore);
+        TextView tvOverallGrade = dialogView.findViewById(R.id.tvOverallGrade);
+        TextView tvTotalIssues = dialogView.findViewById(R.id.tvTotalIssues);
+        TextView tvCriticalWarningCount = dialogView.findViewById(R.id.tvCriticalWarningCount);
+        LinearLayout scannersContainer = dialogView.findViewById(R.id.scannersContainer);
+        MaterialButton btnClose = dialogView.findViewById(R.id.btnClose);
+
+        // Set data
+        Integer score = securityCategory.getScore();
+        if (score != null) {
+            tvOverallScore.setText(score + "%");
+            String grade = SecurityWarningHelper.getGrade(score);
+            tvOverallGrade.setText("Grade: " + grade);
+
+            // Set score color
+            int scoreColor;
+            if (score >= 90)
+                scoreColor = getColor(R.color.success_green);
+            else if (score >= 70)
+                scoreColor = getColor(R.color.warning_orange);
+            else
+                scoreColor = getColor(R.color.critical_red);
+            tvOverallScore.setTextColor(scoreColor);
+        }
+
+        // Count issues
+        int totalIssues = securityCategory.getIssues() != null ? securityCategory.getIssues().size() : 0;
+        int critical = 0, warning = 0;
+        if (securityCategory.getIssues() != null) {
+            for (Issue issue : securityCategory.getIssues()) {
+                if (issue.isCritical())
+                    critical++;
+                else if (issue.isWarning())
+                    warning++;
+            }
+        }
+
+        tvTotalIssues.setText(totalIssues + " Issue" + (totalIssues != 1 ? "s" : ""));
+        tvCriticalWarningCount.setText(critical + " Critical, " + warning + " Warnings");
+
+        // Create dialog
+        android.app.AlertDialog dialog = builder.create();
+        dialog.getWindow()
+                .setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        // Close button
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     @Override

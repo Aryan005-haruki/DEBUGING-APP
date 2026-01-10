@@ -27,7 +27,7 @@ const PATTERNS = {
 
     // Database Credentials
     dbPassword: {
-        pattern: /(password|passwd|pwd|db[_-]?pass)\s*[:=]\s*['"]([^'"]{3,})['"]/ gi,
+        pattern: /(password|passwd|pwd|db[_-]?pass)\s*[:=]\s*['"]([^'"]{3,})['"]/gi,
         name: 'Database Password'
     },
     connectionString: {

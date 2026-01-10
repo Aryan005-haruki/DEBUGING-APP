@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quick Stats Widget - Issues Summary -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center"
+    android:weightSum="4">
+
+    <!-- Critical -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tvCriticalCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/vibrant_critical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔴 Critical"
+            android:textSize="11sp"
+            android:textColor="@color/text_premium_secondary"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- High -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tvWarningCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/vibrant_warning"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🟠 High"
+            android:textSize="11sp"
+            android:textColor="@color/text_premium_secondary"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- Medium -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tvMediumCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/vibrant_info"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🟡 Medium"
+            android:textSize="11sp"
+            android:textColor="@color/text_premium_secondary"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- Passed -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tvPassedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/vibrant_success"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✅ Passed"
+            android:textSize="11sp"
+            android:textColor="@color/text_premium_secondary"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>

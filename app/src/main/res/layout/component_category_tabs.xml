@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Category Filter Tabs (All data, CVEs, Security Activity, etc.) -->
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:background="@color/white"
+    android:paddingVertical="12dp">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupCategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAllData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All data"
+            android:checked="true"
+            style="@style/Widget.Material3.Chip.Filter"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipCVEs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CVEs etc"
+            style="@style/Widget.Material3.Chip.Filter"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSecurity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Security Activity"
+            style="@style/Widget.Material3.Chip.Filter"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPerformance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Performance"
+            style="@style/Widget.Material3.Chip.Filter"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSEO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEO"
+            style="@style/Widget.Material3.Chip.Filter"/>
+    </com.google.android.material.chip.ChipGroup>
+</HorizontalScrollView>

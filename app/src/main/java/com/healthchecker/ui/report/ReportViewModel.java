@@ -44,17 +44,24 @@ public class ReportViewModel extends ViewModel {
         String filter = selectedSeverityFilter.getValue();
 
         if (data == null || data.getCategories() == null) {
+            android.util.Log.d("ReportViewModel", "No data or categories");
             return new ArrayList<>();
         }
 
         List<Issue> allIssues = new ArrayList<>();
         for (AnalysisResponse.Category category : data.getCategories()) {
             if (category.getIssues() != null) {
+                android.util.Log.d("ReportViewModel",
+                        "Category: " + category.getName() + " has " + category.getIssues().size() + " issues");
                 allIssues.addAll(category.getIssues());
             }
         }
 
+        android.util.Log.d("ReportViewModel",
+                "Total issues before filter: " + allIssues.size() + ", Filter: " + filter);
+
         if ("ALL".equals(filter)) {
+            android.util.Log.d("ReportViewModel", "Returning ALL " + allIssues.size() + " issues");
             return allIssues;
         } else if ("CRITICAL".equals(filter)) {
             List<Issue> filtered = new ArrayList<>();
@@ -63,14 +70,18 @@ public class ReportViewModel extends ViewModel {
                     filtered.add(issue);
                 }
             }
+            android.util.Log.d("ReportViewModel", "Filtered CRITICAL: " + filtered.size() + " issues");
             return filtered;
         } else if ("WARNING".equals(filter)) {
             List<Issue> filtered = new ArrayList<>();
             for (Issue issue : allIssues) {
+                android.util.Log.d("ReportViewModel", "Checking issue: " + issue.getTitle() + " severity: "
+                        + issue.getSeverity() + " isWarning: " + issue.isWarning());
                 if (issue.isWarning()) {
                     filtered.add(issue);
                 }
             }
+            android.util.Log.d("ReportViewModel", "Filtered WARNING: " + filtered.size() + " issues");
             return filtered;
         }
 

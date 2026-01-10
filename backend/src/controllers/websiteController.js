@@ -1,9 +1,10 @@
 const pagespeedService = require('../services/pagespeedService');
 const linkCheckerService = require('../services/linkCheckerService');
-// TEMP: Disabled for debugging
-// const securityScannerService = require('../services/securityScannerService');
 const reportGenerator = require('../services/reportGeneratorService');
-const cheerio = require('cheerio');
+const securityScannerService = require('../services/securityScannerService');
+const seoScannerService = require('../services/seoScannerService'); // Phase 3
+const accessibilityScannerService = require('../services/accessibilityScannerService'); // Phase 4
+const codeQualityScannerService = require('../services/codeQualityScannerService'); // Phase 5
 const axios = require('axios');
 
 exports.analyzeWebsite = async (req, res) => {
@@ -39,53 +40,75 @@ exports.analyzeWebsite = async (req, res) => {
 
         console.log(`📊 Analyzing website: ${url}`);
 
-        // Fetch page content for security analysis
-        let pageData = null;
-        let securityData = null;
-
-        try {
-            const pageResponse = await axios.get(url, {
-                timeout: 15000,
-                headers: { 'User-Agent': 'HealthChecker-Bot/1.0' }
-            });
-
-            const $ = cheerio.load(pageResponse.data);
-
-            pageData = {
-                html: pageResponse.data,
-                headers: pageResponse.headers,
-                resources: {
-                    js: [],
-                    css: []
-                }
-            };
-
-            // Extract resources
-            $('script[src]').each((i, elem) => {
-                const src = $(elem).attr('src');
-                if (src) pageData.resources.js.push(src);
-            });
-
-            $('link[rel="stylesheet"]').each((i, elem) => {
-                const href = $(elem).attr('href');
-                if (href) pageData.resources.css.push(href);
-            });
-
-            console.log('📄 Page content fetched for security analysis');
-        } catch (error) {
-            console.warn('⚠️ Unable to fetch page content:', error.message);
-        }
-
-        // Run analyses in parallel (including security scan)
+        // Run analyses in parallel (including Phase 2 security scan + Phase 3 SEO)
         const analysisPromises = [
             pagespeedService.analyze(url),
-            linkCheckerService.analyze(url)
+            linkCheckerService.analyze(url),
+            // Phase 2: Quick security scan (SSL + Headers + Sensitive Data)
+            axios.get(url, {
+                timeout: 15000,
+                headers: {
+                    'User-Agent': 'HealthChecker-SecurityBot/1.0'
+                },
+                maxRedirects: 5
+            })
+                .then(response => securityScannerService.quickSecurityScan(url, {
+                    html: response.data,
+                    headers: response.headers
+                }))
+                .catch(err => {
+                    console.log('⚠️ Security scan failed:', err.message);
+                    return null;
+                }),
+            // Phase 3: SEO Analysis (Meta Tags + Content + Structure + Schema + Mobile)
+            axios.get(url, {
+                timeout: 15000,
+                headers: {
+                    'User-Agent': 'HealthChecker-SEOBot/1.0'
+                },
+                maxRedirects: 5
+            })
+                .then(response => seoScannerService.analyzeSEO(url, {
+                    html: response.data,
+                    headers: response.headers
+                }))
+                .catch(err => {
+                    console.log('⚠️ SEO analysis failed:', err.message);
+                    return null;
+                }),
+            // Phase 4: Accessibility Analysis (WCAG 2.1 AA)
+            axios.get(url, {
+                timeout: 15000,
+                headers: {
+                    'User-Agent': 'HealthChecker-A11yBot/1.0'
+                },
+                maxRedirects: 5
+            })
+                .then(response => accessibilityScannerService.analyzeAccessibility(url, {
+                    html: response.data,
+                    headers: response.headers
+                }))
+                .catch(err => {
+                    console.log('⚠️ Accessibility analysis failed:', err.message);
+                    return null;
+                }),
+            // Phase 5: Code Quality Analysis (HTML, CSS, JS, Performance, Compatibility)
+            axios.get(url, {
+                timeout: 15000,
+                headers: {
+                    'User-Agent': 'HealthChecker-QualityBot/1.0'
+                },
+                maxRedirects: 5
+            })
+                .then(response => codeQualityScannerService.analyzeCodeQuality(url, {
+                    html: response.data,
+                    headers: response.headers
+                }))
+                .catch(err => {
+                    console.log('⚠️ Code quality analysis failed:', err.message);
+                    return null;
+                })
         ];
-
-        // Add security scan if page data available
-        if (pageData) {
-            analysisPromises.push(securityScannerService.scanWebsiteSecurity(url, pageData));
-        }
 
         const results = await Promise.allSettled(analysisPromises);
 
@@ -93,15 +116,20 @@ exports.analyzeWebsite = async (req, res) => {
         const combinedResults = {
             pagespeed: results[0].status === 'fulfilled' ? results[0].value : null,
             brokenLinks: results[1].status === 'fulfilled' ? results[1].value : null,
-            // TEMP: Disabled for debugging
-            security: null, // results[2] && results[2].status === 'fulfilled' ? results[2].value : null,
+            security: results[2].status === 'fulfilled' ? results[2].value : null,
+            seo: results[3].status === 'fulfilled' ? results[3].value : null,
+            accessibility: results[4].status === 'fulfilled' ? results[4].value : null, // Phase 4
+            codeQuality: results[5].status === 'fulfilled' ? results[5].value : null, // Phase 5
             lighthouse: null
         };
 
         console.log('📝 Analysis Results:', {
             pagespeedSuccess: !!combinedResults.pagespeed,
             brokenLinksSuccess: !!combinedResults.brokenLinks,
-            securitySuccess: !!combinedResults.security
+            securitySuccess: !!combinedResults.security,
+            seoSuccess: !!combinedResults.seo,
+            accessibilitySuccess: !!combinedResults.accessibility, // Phase 4
+            codeQualitySuccess: !!combinedResults.codeQuality // Phase 5
         });
 
         // Generate final report
