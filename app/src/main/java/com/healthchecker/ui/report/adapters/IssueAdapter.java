@@ -4,13 +4,12 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.healthchecker.R;
 import com.healthchecker.data.models.Issue;
 
@@ -53,16 +52,16 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
     }
 
     static class IssueViewHolder extends RecyclerView.ViewHolder {
-        private final CardView cardView;
-        private final ImageView ivSeverityIcon;
+        private final MaterialCardView cardView;
+        private final View severityBar;
         private final TextView tvSeverityBadge;
         private final TextView tvTitle;
         private final TextView tvDescription;
 
         public IssueViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardView = (CardView) itemView;
-            ivSeverityIcon = itemView.findViewById(R.id.ivSeverityIcon);
+            cardView = (MaterialCardView) itemView;
+            severityBar = itemView.findViewById(R.id.severityBar);
             tvSeverityBadge = itemView.findViewById(R.id.tvSeverityBadge);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
@@ -73,14 +72,17 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
             tvDescription.setText(issue.getDescription());
             tvSeverityBadge.setText(issue.getSeverity());
 
-            // Set severity-based colors
+            // Set severity colors for bar, badge text, and badge background
             if (issue.isCritical()) {
+                severityBar.setBackgroundColor(Color.parseColor("#D32F2F"));
                 tvSeverityBadge.setTextColor(Color.parseColor("#D32F2F"));
                 tvSeverityBadge.setBackgroundColor(Color.parseColor("#FFEBEE"));
             } else if (issue.isWarning()) {
+                severityBar.setBackgroundColor(Color.parseColor("#F57C00"));
                 tvSeverityBadge.setTextColor(Color.parseColor("#F57C00"));
                 tvSeverityBadge.setBackgroundColor(Color.parseColor("#FFF3E0"));
             } else {
+                severityBar.setBackgroundColor(Color.parseColor("#388E3C"));
                 tvSeverityBadge.setTextColor(Color.parseColor("#388E3C"));
                 tvSeverityBadge.setBackgroundColor(Color.parseColor("#E8F5E9"));
             }

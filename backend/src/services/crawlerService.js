@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { getBrowser } = require('../utils/browserLauncher');
 const cheerio = require('cheerio');
 const RobotsParser = require('robots-parser');
 const axios = require('axios');
@@ -100,11 +100,8 @@ class WebsiteCrawler {
             // Load robots.txt
             await this.loadRobotsTxt();
 
-            // Launch browser
-            this.browser = await puppeteer.launch({
-                headless: this.config.headless,
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
-            });
+            // Launch browser (works on both Vercel and local/Docker)
+            this.browser = await getBrowser();
 
             // Add start URL to queue
             this.crawlQueue.push({ url: this.startUrl, depth: 0, parentUrl: null });

@@ -3,114 +3,393 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_light_background">
+    android:background="@color/md_theme_light_background"
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingBottom="40dp">
 
-        <!-- Issue Title -->
-        <TextView
-            android:id="@+id/tvIssueTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-            android:textColor="@color/md_theme_light_onBackground"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Issue Details Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- ═══════════ HEADER BANNER ═══════════ -->
+        <LinearLayout
+            android:id="@+id/headerBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/md_theme_light_surfaceVariant"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp"
+            android:background="@color/critical_bg">
 
+            <!-- Severity Badge Row -->
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/ivSeverityIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@android:drawable/ic_dialog_alert"
+                    app:tint="@color/critical_red"/>
+
+                <TextView
+                    android:id="@+id/tvSeverityBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CRITICAL"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/critical_red"/>
+            </LinearLayout>
+
+            <!-- Issue Title -->
+            <TextView
+                android:id="@+id/tvIssueTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:textSize="20sp"
+                android:textColor="@color/md_theme_light_onBackground"
+                android:textStyle="bold"
+                android:lineSpacingExtra="2dp"
+                android:layout_marginBottom="6dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
+            <!-- Category Tag -->
+            <TextView
+                android:id="@+id/tvCategoryChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/md_theme_light_onSurfaceVariant"/>
+
+        </LinearLayout>
+
+        <!-- ═══════════ BODY CONTENT ═══════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <!-- ── CARD 1: LOCATION (Breadcrumb + Details) ── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_border"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    android:textColor="@color/md_theme_light_onSurfaceVariant"
-                    android:layout_marginBottom="4dp"/>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tvIssueDescription"
-                    android:layout_width="wrap_content"
+                    <!-- Section Header -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍  Location"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_light_secondary"
+                        android:layout_marginBottom="12dp"/>
+
+                    <!-- Breadcrumb Path Strip -->
+                    <HorizontalScrollView
+                        android:id="@+id/scrollBreadcrumb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"
+                        android:layout_marginBottom="12dp"
+                        android:background="#F5F3FF"
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:id="@+id/breadcrumbContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"/>
+                    </HorizontalScrollView>
+
+                    <!-- Thin Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/card_border"
+                        android:layout_marginBottom="10dp"/>
+
+                    <!-- Page -->
+                    <LinearLayout
+                        android:id="@+id/rowLocationPage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:text="Page"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_premium_secondary"/>
+
+                        <TextView
+                            android:id="@+id/tvLocationPage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_premium_primary"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <!-- Element -->
+                    <LinearLayout
+                        android:id="@+id/rowLocationElement"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:text="Element"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_premium_secondary"/>
+
+                        <TextView
+                            android:id="@+id/tvLocationElement"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            android:fontFamily="monospace"
+                            android:textColor="@color/premium_primary"/>
+                    </LinearLayout>
+
+                    <!-- Selector -->
+                    <LinearLayout
+                        android:id="@+id/rowLocationSelector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:text="Selector"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_premium_secondary"/>
+
+                        <TextView
+                            android:id="@+id/tvLocationSelector"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:fontFamily="monospace"
+                            android:textColor="@color/text_premium_secondary"/>
+                    </LinearLayout>
+
+                    <!-- Hint -->
+                    <LinearLayout
+                        android:id="@+id/rowLocationHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:text="Details"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_premium_secondary"/>
+
+                        <TextView
+                            android:id="@+id/tvLocationHint"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_premium_primary"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── CARD 2: DESCRIPTION + IMPACT ── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_border"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textColor="@color/md_theme_light_onSurface"
-                    android:layout_marginBottom="12dp"/>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tvIssueImpact"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📋  What is this issue?"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_premium_primary"
+                        android:layout_marginBottom="10dp"/>
+
+                    <TextView
+                        android:id="@+id/tvIssueDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_premium_primary"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="14dp"/>
+
+                    <!-- Impact Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#FFF8E1"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⚡  Impact"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/warning_orange"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:id="@+id/tvIssueImpact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textColor="#795548"
+                            android:lineSpacingExtra="2dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── CARD 3: HOW TO FIX ── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_border"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:textColor="@color/md_theme_light_onSurfaceVariant"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        <!-- Fix Summary -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/how_to_fix"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            android:textColor="@color/md_theme_light_onBackground"
-            android:layout_marginBottom="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔧  How to Fix"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/success_green"
+                        android:layout_marginBottom="10dp"/>
 
-        <TextView
-            android:id="@+id/tvFixSummary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="@color/md_theme_light_onSurface"
-            android:layout_marginBottom="20dp"/>
+                    <TextView
+                        android:id="@+id/tvFixSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_premium_primary"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
 
-        <!-- Steps -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/steps"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/md_theme_light_onBackground"
-            android:layout_marginBottom="8dp"/>
+                    <!-- Steps with subtle background -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#F0FDF4"
+                        android:padding="12dp">
 
-        <TextView
-            android:id="@+id/tvFixSteps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/md_theme_light_onSurface"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="20dp"/>
+                        <TextView
+                            android:id="@+id/tvFixSteps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_premium_primary"
+                            android:lineSpacingExtra="6dp"/>
+                    </LinearLayout>
 
-        <!-- Resources -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/resources"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@color/md_theme_light_onBackground"
-            android:layout_marginBottom="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/tvResources"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="@color/md_theme_light_primary"
-            android:autoLink="web"
-            android:lineSpacingExtra="4dp"/>
+            <!-- ── CARD 4: USEFUL RESOURCES ── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardResources"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_border"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔗  Useful Resources"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/premium_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvResources"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="@color/premium_primary"
+                        android:autoLink="web"
+                        android:lineSpacingExtra="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

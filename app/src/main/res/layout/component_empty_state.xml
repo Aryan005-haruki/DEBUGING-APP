@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:id="@+id/ivEmptyIcon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:alpha="0.3"
+        android:src="@android:drawable/ic_menu_info_details"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvEmptyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Data Found"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_premium_primary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvEmptyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run a scan to see information here."
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:textColor="@color/text_premium_secondary"/>
+</LinearLayout>

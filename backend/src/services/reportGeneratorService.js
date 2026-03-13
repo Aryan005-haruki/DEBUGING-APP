@@ -4,7 +4,11 @@ const fixSuggestions = require('../utils/fixSuggestions');
  * Generate comprehensive website analysis report
  */
 exports.generateWebsiteReport = (url, analysisResults) => {
-    const { pagespeed, lighthouse, brokenLinks, security, seo, accessibility } = analysisResults;
+    const { pagespeed, lighthouse, brokenLinks, security, seo, accessibility,
+            dnsAudit, techStack, domainIntel, networkWaterfall, redirectChain,
+            cookieAudit, mobileFriendliness, mixedContent, blacklist,
+            robotsSitemap, socialPreview, imageOptimization, uptime,
+            legalCompliance, structuredData, brokenImages } = analysisResults;
 
     const categories = [];
     const timestamp = new Date().toISOString();
@@ -13,7 +17,6 @@ exports.generateWebsiteReport = (url, analysisResults) => {
     if (pagespeed?.mobile || pagespeed?.desktop || lighthouse) {
         categories.push(generatePerformanceCategory(pagespeed, lighthouse));
     } else {
-        // Fallback: Create default performance category
         categories.push({
             name: 'Performance',
             score: null,
@@ -28,9 +31,11 @@ exports.generateWebsiteReport = (url, analysisResults) => {
         });
     }
 
-    // SEO category - with fallback
-    if (pagespeed?.mobile || pagespeed?.desktop) {
-        categories.push(generateSeoCategory(pagespeed.mobile || pagespeed.desktop));
+    // SEO category - prioritize Deep Search
+    if (seo) {
+        categories.push(generateSEOAnalysisCategory(seo));
+    } else if (pagespeed?.mobile || pagespeed?.desktop) {
+        categories.push(generateStandardSeoCategory(pagespeed.mobile || pagespeed.desktop));
     } else {
         categories.push({
             name: 'SEO',
@@ -46,9 +51,11 @@ exports.generateWebsiteReport = (url, analysisResults) => {
         });
     }
 
-    // Accessibility category - with fallback
-    if (pagespeed?.mobile || pagespeed?.desktop) {
-        categories.push(generateAccessibilityCategory(pagespeed.mobile || pagespeed.desktop));
+    // Accessibility category
+    if (accessibility) {
+        categories.push(generateDeepAccessibilityCategory(accessibility));
+    } else if (pagespeed?.mobile || pagespeed?.desktop) {
+        categories.push(generateStandardAccessibilityCategory(pagespeed.mobile || pagespeed.desktop));
     } else {
         categories.push({
             name: 'Accessibility',
@@ -64,97 +71,98 @@ exports.generateWebsiteReport = (url, analysisResults) => {
         });
     }
 
-    // Security category - always works
-    categories.push(generateSecurityCategory(url));
-
-    // Security Vulnerabilities category (Phase 2)
+    // Security category
     if (security) {
         categories.push(generateSecurityVulnerabilitiesCategory(security));
     } else {
-        categories.push({
-            name: 'Security Vulnerabilities',
-            score: null,
-            issues: [{
-                id: 'sec-vuln-unavailable',
-                severity: 'WARNING',
-                title: 'Security Scan Unavailable',
-                description: 'Advanced security scanning could not be performed',
-                impact: 'Some security vulnerabilities may not be detected',
-                fixSuggestion: fixSuggestions.security.overall
-            }]
-        });
+        categories.push(generateBasicSecurityCategory(url));
     }
 
-    // SEO Analysis category (Phase 3) - Deep SEO Analysis
-    if (analysisResults.seo) {
-        categories.push(generateSEOAnalysisCategory(analysisResults.seo));
-    } else {
-        categories.push({
-            name: 'SEO Analysis',
-            score: null,
-            issues: [{
-                id: 'seo-analysis-unavailable',
-                severity: 'WARNING',
-                title: 'SEO Analysis Unavailable',
-                description: 'Deep SEO analysis could not be performed',
-                impact: 'Detailed SEO recommendations not available',
-                fixSuggestion: fixSuggestions.seo.overall
-            }]
-        });
-    }
-
-    // Accessibility Compliance category (Phase 4) - WCAG 2.1 AA
-    if (analysisResults.accessibility) {
-        categories.push(generateAccessibilityCategory(analysisResults.accessibility));
-    } else {
-        categories.push({
-            name: 'Accessibility Compliance',
-            score: null,
-            issues: [{
-                id: 'a11y-deep-unavailable',
-                severity: 'WARNING',
-                title: 'Accessibility Analysis Unavailable',
-                description: 'WCAG 2.1 AA compliance check could not be performed',
-                impact: 'Detailed accessibility recommendations not available',
-                fixSuggestion: fixSuggestions.accessibility.overall
-            }]
-        });
-    }
-
-    // Code Quality category (Phase 5) - HTML, CSS, JS, Performance, Compatibility
+    // Code Quality category
     if (analysisResults.codeQuality) {
         categories.push(generateCodeQualityCategory(analysisResults.codeQuality));
-    } else {
-        categories.push({
-            name: 'Code Quality',
-            score: null,
-            issues: [{
-                id: 'code-quality-unavailable',
-                severity: 'WARNING',
-                title: 'Code Quality Analysis Unavailable',
-                description: 'HTML, CSS, and JavaScript quality analysis could not be performed',
-                impact: 'Code quality issues may not be detected',
-                fixSuggestion: fixSuggestions.codeQuality?.overall || fixSuggestions.performance.overall
-            }]
-        });
     }
 
     // Broken Links category
     if (brokenLinks) {
         categories.push(generateBrokenLinksCategory(brokenLinks));
-    } else {
-        categories.push({
-            name: 'Broken Links',
-            score: null,
-            issues: [{
-                id: 'links-unavailable',
-                severity: 'WARNING',
-                title: 'Link Check Unavailable',
-                description: 'Unable to scan for broken links. Try again later.',
-                impact: 'Could not verify link integrity',
-                fixSuggestion: fixSuggestions.brokenLinks
-            }]
-        });
+    }
+
+    // ── Phase 6: New Advanced Categories ──
+
+    // DNS & Email Security
+    if (dnsAudit && dnsAudit.issues) {
+        categories.push(generateGenericCategory('DNS & Email Security', dnsAudit));
+    }
+
+    // Technology Stack
+    if (techStack && techStack.issues) {
+        categories.push(generateGenericCategory('Technology Stack', techStack));
+    }
+
+    // Domain Intelligence
+    if (domainIntel && domainIntel.issues) {
+        categories.push(generateGenericCategory('Domain Intelligence', domainIntel));
+    }
+
+    // Network Performance
+    if (networkWaterfall && networkWaterfall.issues) {
+        categories.push(generateGenericCategory('Network Performance', networkWaterfall));
+    }
+
+    // Redirect Chain
+    if (redirectChain && redirectChain.issues) {
+        categories.push(generateGenericCategory('Redirect Chain', redirectChain));
+    }
+
+    // Cookie Security
+    if (cookieAudit && cookieAudit.issues) {
+        categories.push(generateGenericCategory('Cookie Security', cookieAudit));
+    }
+
+    // Mobile Friendliness
+    if (mobileFriendliness && mobileFriendliness.issues) {
+        categories.push(generateGenericCategory('Mobile Friendliness', mobileFriendliness));
+    }
+
+    // Mixed Content & Integrity
+    if (mixedContent && mixedContent.issues) {
+        categories.push(generateGenericCategory('Mixed Content & Integrity', mixedContent));
+    }
+
+    // Blacklist & Reputation
+    if (blacklist && blacklist.issues) {
+        categories.push(generateGenericCategory('Blacklist & Reputation', blacklist));
+    }
+
+    // ── Phase 7: New Categories ──
+
+    if (robotsSitemap && robotsSitemap.issues) {
+        categories.push(generateGenericCategory('Robots & Sitemap', robotsSitemap));
+    }
+
+    if (socialPreview && socialPreview.issues) {
+        categories.push(generateGenericCategory('Social Media Preview', socialPreview));
+    }
+
+    if (imageOptimization && imageOptimization.issues) {
+        categories.push(generateGenericCategory('Image Optimization', imageOptimization));
+    }
+
+    if (uptime && uptime.issues) {
+        categories.push(generateGenericCategory('Uptime & Speed', uptime));
+    }
+
+    if (legalCompliance && legalCompliance.issues) {
+        categories.push(generateGenericCategory('Legal & Compliance', legalCompliance));
+    }
+
+    if (structuredData && structuredData.issues) {
+        categories.push(generateGenericCategory('Structured Data', structuredData));
+    }
+
+    if (brokenImages && brokenImages.issues) {
+        categories.push(generateGenericCategory('Broken Images', brokenImages));
     }
 
     // Calculate summary
@@ -210,7 +218,8 @@ function generatePerformanceCategory(pagespeed, lighthouse) {
             title: 'Poor Performance Score',
             description: `Mobile performance score is ${mobileScore}/100 (should be > 90)`,
             impact: 'Users experience very slow page loads, leading to high bounce rates',
-            fixSuggestion: fixSuggestions.performance.overall
+            fixSuggestion: fixSuggestions.performance.overall,
+            location: { page: 'Entire website', element: 'All pages', lineHint: 'Affects overall page load speed', path: ['Home', 'All Pages', 'Performance', '⚠️ Score: ' + mobileScore + '/100'] }
         });
     } else if (mobileScore < 90) {
         issues.push({
@@ -219,7 +228,8 @@ function generatePerformanceCategory(pagespeed, lighthouse) {
             title: 'Performance Needs Improvement',
             description: `Mobile performance score is ${mobileScore}/100 (target: 90+)`,
             impact: 'Page loads could be faster, affecting user experience',
-            fixSuggestion: fixSuggestions.performance.overall
+            fixSuggestion: fixSuggestions.performance.overall,
+            location: { page: 'Homepage', element: 'Page resources', lineHint: 'Measured on mobile network conditions', path: ['Home', 'Resources', 'Performance', '⚠️ Score: ' + mobileScore + '/100'] }
         });
     }
 
@@ -233,7 +243,8 @@ function generatePerformanceCategory(pagespeed, lighthouse) {
                 title: opp.title,
                 description: opp.description || opp.displayValue || 'Optimization opportunity detected',
                 impact: 'Affects page load time and user experience',
-                fixSuggestion: fixSuggestions.performance[suggestionKey] || fixSuggestions.performance.overall
+                fixSuggestion: fixSuggestions.performance[suggestionKey] || fixSuggestions.performance.overall,
+                location: { page: 'Homepage', element: opp.id, lineHint: 'Detected by PageSpeed Insights', path: ['Home', 'Performance', opp.title, '⚡ ' + (opp.displayValue || 'Optimization needed')] }
             });
         });
     }
@@ -245,7 +256,7 @@ function generatePerformanceCategory(pagespeed, lighthouse) {
     };
 }
 
-function generateSeoCategory(mobileData) {
+function generateStandardSeoCategory(mobileData) {
     const issues = [];
     const seoScore = mobileData.scores?.seo || 0;
 
@@ -256,7 +267,8 @@ function generateSeoCategory(mobileData) {
             title: 'SEO Score Below Target',
             description: `SEO score is ${seoScore}/100 (target: 90+)`,
             impact: 'May affect search engine rankings and discoverability',
-            fixSuggestion: fixSuggestions.seo.overall
+            fixSuggestion: fixSuggestions.seo.overall,
+            location: { page: 'All pages', element: '<head> section', lineHint: 'Check meta tags and title elements', path: ['Home', '<head>', 'SEO Meta Tags', '⚠️ Score: ' + seoScore + '/100'] }
         });
     }
 
@@ -267,7 +279,7 @@ function generateSeoCategory(mobileData) {
     };
 }
 
-function generateAccessibilityCategory(mobileData) {
+function generateStandardAccessibilityCategory(mobileData) {
     const issues = [];
     const a11yScore = mobileData.scores?.accessibility || 0;
 
@@ -278,7 +290,8 @@ function generateAccessibilityCategory(mobileData) {
             title: 'Accessibility Issues Detected',
             description: `Accessibility score is ${a11yScore}/100 (target: 90+)`,
             impact: 'Users with disabilities may have difficulty using the site',
-            fixSuggestion: fixSuggestions.accessibility.overall
+            fixSuggestion: fixSuggestions.accessibility.overall,
+            location: { page: 'All pages', element: 'Interactive elements', lineHint: 'Check images, buttons, and forms for accessibility attributes', path: ['Home', 'All Pages', 'Interactive Elements', '⚠️ Score: ' + a11yScore + '/100'] }
         });
     }
 
@@ -295,8 +308,15 @@ function generateSecurityVulnerabilitiesCategory(securityResults) {
     // Map security scanner results to report issues
     if (securityResults.issues && securityResults.issues.length > 0) {
         securityResults.issues.forEach((issue, idx) => {
-            // Map category to fix suggestion
             const suggestionKey = getCategoryFixSuggestion(issue.category);
+            const locationMap = {
+                'SSL/TLS':                { element: 'HTTPS Protocol',    lineHint: 'Check SSL certificate and TLS version' },
+                'Security Headers':       { element: 'HTTP Response Headers', lineHint: 'Missing in server response headers' },
+                'Sensitive Data Exposure':{ element: 'HTML source / JavaScript', lineHint: 'Found in page source code' },
+                'XSS Protection':         { element: 'Input fields / scripts', lineHint: 'Check inline scripts and user inputs' },
+                'CSRF Protection':        { element: 'Forms', lineHint: 'Check form action endpoints' },
+            };
+            const loc = locationMap[issue.category] || { element: issue.category || 'Unknown', lineHint: 'Detected during security scan' };
 
             issues.push({
                 id: issue.id || `sec-${idx}`,
@@ -304,13 +324,14 @@ function generateSecurityVulnerabilitiesCategory(securityResults) {
                 title: issue.title,
                 description: issue.description,
                 impact: issue.impact,
-                fixSuggestion: suggestionKey
+                fixSuggestion: suggestionKey,
+                location: { page: 'Entire website', element: loc.element, lineHint: loc.lineHint, path: ['Home', issue.category || 'Security', loc.element, '🔴 ' + issue.title] }
             });
         });
     }
 
     return {
-        name: 'Security Vulnerabilities',
+        name: 'Security',
         score: securityResults.summary?.overallScore || 0,
         issues,
         summary: {
@@ -337,7 +358,7 @@ function getCategoryFixSuggestion(category) {
     return mapping[category] || fixSuggestions.security.overall;
 }
 
-function generateSecurityCategory(url) {
+function generateBasicSecurityCategory(url) {
     const issues = [];
     const isHttps = url.toLowerCase().startsWith('https://');
 
@@ -348,7 +369,8 @@ function generateSecurityCategory(url) {
             title: 'Missing HTTPS',
             description: 'Site is not using HTTPS encryption',
             impact: 'Data can be intercepted, browsers show warnings, SEO penalties',
-            fixSuggestion: fixSuggestions.security.https
+            fixSuggestion: fixSuggestions.security.https,
+            location: { page: 'All pages', element: 'URL / HTTP Protocol', selector: 'http://', lineHint: 'The site URL starts with http:// instead of https://', path: ['Home', 'URL', 'Protocol', '🔴 No HTTPS'] }
         });
     }
 
@@ -370,7 +392,19 @@ function generateBrokenLinksCategory(brokenLinksData) {
             description: `Found ${brokenLinksData.totalBrokenLinks} broken links across ${brokenLinksData.pagesScanned} pages`,
             impact: 'Poor user experience and negative SEO impact',
             fixSuggestion: fixSuggestions.brokenLinks,
-            details: brokenLinksData.brokenLinks
+            details: brokenLinksData.brokenLinks,
+            location: {
+                page: `${brokenLinksData.pagesScanned} pages scanned`,
+                element: '<a href="..."> tags',
+                selector: 'a[href]',
+                lineHint: 'Broken links return 404 or connection errors',
+                path: [
+                    'Home',
+                    'Page Links',
+                    '<a href> Tags',
+                    '🔴 ' + brokenLinksData.totalBrokenLinks + ' Broken Link' + (brokenLinksData.totalBrokenLinks > 1 ? 's' : '') + ' Found'
+                ]
+            }
         });
     }
 
@@ -390,8 +424,15 @@ function generateSEOAnalysisCategory(seoResults) {
     // Map all SEO issues from all analyzers
     if (seoResults.issues && seoResults.issues.length > 0) {
         seoResults.issues.forEach((issue, idx) => {
-            // Determine fix suggestion based on category
             const suggestionKey = getSEOFixSuggestion(issue.category);
+            const seoLocationMap = {
+                'SEO - Meta Tags':  { element: '<meta> tags in <head>', selector: 'meta[name], meta[property]', lineHint: 'Found in HTML <head> section' },
+                'SEO - Content':    { element: 'Page body content', selector: 'body', lineHint: 'Detected in page text content' },
+                'SEO - Structure':  { element: 'Heading hierarchy', selector: 'h1, h2, h3', lineHint: 'Found in page heading structure' },
+                'SEO - Schema':     { element: 'Structured data', selector: 'script[type="application/ld+json"]', lineHint: 'Missing or invalid JSON-LD schema markup' },
+                'SEO - Mobile':     { element: 'Viewport / mobile config', selector: 'meta[name="viewport"]', lineHint: 'Found in <head> meta tags' },
+            };
+            const loc = seoLocationMap[issue.category] || { element: issue.category || 'Page', lineHint: 'Detected during SEO analysis' };
 
             issues.push({
                 id: issue.id || `seo-${idx}`,
@@ -399,20 +440,21 @@ function generateSEOAnalysisCategory(seoResults) {
                 title: issue.title,
                 description: issue.description,
                 impact: issue.impact,
-                fixSuggestion: issue.fixSuggestion || suggestionKey
+                fixSuggestion: issue.fixSuggestion || suggestionKey,
+                location: { page: 'Homepage', ...loc, path: ['Home', issue.category || 'SEO', loc.element || 'HTML', '⚠️ ' + issue.title] }
             });
         });
     }
 
     return {
-        name: 'SEO Analysis',
+        name: 'SEO',
         score: seoResults.score || 0,
         issues,
         summary: {
             grade: seoResults.grade,
-            totalIssues: seoResults.summary?.totalIssues || 0,
-            critical: seoResults.summary?.critical || 0,
-            warning: seoResults.summary?.warning || 0
+            totalIssues: issues.length,
+            critical: issues.filter(i => i.severity === 'CRITICAL').length,
+            warning: issues.filter(i => i.severity === 'WARNING').length
         }
     };
 }
@@ -436,14 +478,22 @@ function getSEOFixSuggestion(category) {
 /**
  * Generate Accessibility Compliance category (Phase 4)
  */
-function generateAccessibilityCategory(a11yResults) {
+function generateDeepAccessibilityCategory(a11yResults) {
     const issues = [];
 
     // Map all accessibility issues from all analyzers
     if (a11yResults.issues && a11yResults.issues.length > 0) {
         a11yResults.issues.forEach((issue, idx) => {
-            // Use issue's own fixSuggestion or get from category
             const suggestionKey = getAccessibilityFixSuggestion(issue.category);
+            const a11yLocationMap = {
+                'Accessibility - Perceivable':  { element: 'Images / media', selector: 'img, video, audio', lineHint: 'Missing alternative text or captions' },
+                'Accessibility - Operable':     { element: 'Interactive controls', selector: 'button, a, input', lineHint: 'Keyboard navigation or focus issues' },
+                'Accessibility - Understandable': { element: 'Form elements', selector: 'input, label, select', lineHint: 'Missing labels or unclear instructions' },
+                'Accessibility - Color Contrast': { element: 'Text elements', selector: 'p, h1, h2, h3, span', lineHint: 'Text color vs background contrast is too low' },
+                'Accessibility - ARIA':         { element: 'ARIA attributes', selector: '[role], [aria-*]', lineHint: 'Missing or incorrect ARIA landmark roles' },
+                'Accessibility - Keyboard':     { element: 'Focusable elements', selector: ':focusable', lineHint: 'Elements not reachable by keyboard Tab key' },
+            };
+            const loc = a11yLocationMap[issue.category] || { element: issue.category || 'Page elements', lineHint: 'Detected during accessibility audit' };
 
             issues.push({
                 id: issue.id || `a11y-${idx}`,
@@ -451,13 +501,14 @@ function generateAccessibilityCategory(a11yResults) {
                 title: issue.title,
                 description: issue.description,
                 impact: issue.impact,
-                fixSuggestion: issue.fixSuggestion || suggestionKey
+                fixSuggestion: issue.fixSuggestion || suggestionKey,
+                location: { page: 'Homepage', ...loc, path: ['Home', issue.category || 'Accessibility', loc.element || 'Elements', '⚠️ ' + issue.title] }
             });
         });
     }
 
     return {
-        name: 'Accessibility Compliance',
+        name: 'Accessibility',
         score: a11yResults.score || 0,
         issues,
         summary: {
@@ -562,13 +613,23 @@ function generateCodeQualityCategory(codeQualityResults) {
     // Map all code quality issues from all analyzers
     if (codeQualityResults.issues && codeQualityResults.issues.length > 0) {
         codeQualityResults.issues.forEach((issue, idx) => {
+            const qualityLocationMap = {
+                'HTML Quality':        { element: 'HTML markup', selector: 'html, body, *', lineHint: 'Found in page HTML structure' },
+                'CSS Quality':         { element: 'Stylesheet / <style> tags', selector: 'link[rel="stylesheet"], style', lineHint: 'Found in CSS rules' },
+                'JavaScript Quality':  { element: 'Script files / <script> tags', selector: 'script[src], script', lineHint: 'Found in JavaScript code' },
+                'Performance':         { element: 'Page resources', lineHint: 'Affects overall page load performance' },
+                'Browser Compatibility': { element: 'CSS / JS features', lineHint: 'Uses features not supported in all browsers' },
+            };
+            const loc = qualityLocationMap[issue.category] || { element: issue.category || 'Page code', lineHint: 'Detected during code quality analysis' };
+
             issues.push({
                 id: issue.id || `quality-${idx}`,
                 severity: issue.severity,
                 title: issue.title,
                 description: issue.description,
                 impact: issue.impact,
-                fixSuggestion: issue.fixSuggestion || fixSuggestions.performance.overall
+                fixSuggestion: issue.fixSuggestion || fixSuggestions.performance.overall,
+                location: { page: 'Homepage', ...loc, path: ['Home', issue.category || 'Code Quality', loc.element || 'Source code', '⚠️ ' + issue.title] }
             });
         });
     }
@@ -589,6 +650,56 @@ function generateCodeQualityCategory(codeQualityResults) {
                 performance: codeQualityResults.categories?.performance?.score,
                 compatibility: codeQualityResults.categories?.compatibility?.score
             }
+        }
+    };
+}
+
+/**
+ * Generic category generator for new Phase 6 scanners
+ * Works for any scanner result that has { issues: [...], score, summary }
+ */
+function generateGenericCategory(categoryName, scannerResult) {
+    const issues = [];
+
+    if (scannerResult.issues && scannerResult.issues.length > 0) {
+        scannerResult.issues.forEach((issue, idx) => {
+            // Build a default fix suggestion
+            const defaultFix = {
+                summary: `Fix this ${issue.severity === 'CRITICAL' ? 'critical' : 'important'} ${categoryName} issue`,
+                steps: [
+                    `Identify the problem: ${issue.description}`,
+                    `Understand the impact: ${issue.impact}`,
+                    `Apply the recommended fix for "${issue.title}"`,
+                    'Re-scan to verify the fix'
+                ],
+                resources: [`https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(issue.title)}`]
+            };
+
+            issues.push({
+                id: issue.id || `${categoryName.toLowerCase().replace(/[^a-z]/g, '')}-${idx}`,
+                severity: issue.severity || 'WARNING',
+                title: issue.title,
+                description: issue.description,
+                impact: issue.impact,
+                fixSuggestion: issue.fixSuggestion || defaultFix,
+                location: {
+                    page: 'Homepage',
+                    element: issue.category || categoryName,
+                    lineHint: `Detected during ${categoryName} analysis`,
+                    path: ['Home', categoryName, issue.category || categoryName, (issue.severity === 'CRITICAL' ? '🔴 ' : '⚠️ ') + issue.title]
+                }
+            });
+        });
+    }
+
+    return {
+        name: categoryName,
+        score: scannerResult.score != null ? scannerResult.score : undefined,
+        issues,
+        summary: scannerResult.summary || {
+            totalIssues: issues.length,
+            critical: issues.filter(i => i.severity === 'CRITICAL').length,
+            warning: issues.filter(i => i.severity === 'WARNING').length
         }
     };
 }

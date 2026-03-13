@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/md_theme_light_background">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollViewContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,6 +42,36 @@
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="@color/text_premium_secondary"/>
         </LinearLayout>
+        
+        <!-- Website Screenshot Preview -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardScreenshot"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/card_border"
+            android:visibility="gone">
+            
+            <ImageView
+                android:id="@+id/ivWebsiteScreenshot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/md_theme_light_surfaceVariant"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Security Warning Banner -->
+        <include layout="@layout/security_warning_banner"
+            android:id="@+id/securityWarningBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
 
         <!-- Hero Score Card -->
         <include layout="@layout/component_hero_score_card" />
@@ -52,39 +82,6 @@
         <!-- Category Filter Tabs -->
         <include layout="@layout/component_category_tabs" />
 
-
-        <!-- Filter Chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupFilters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            app:singleSelection="true"
-            app:selectionRequired="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_issues"
-                android:checked="true"
-                style="@style/Widget.Material3.Chip.Filter"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCritical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/critical_issues"
-                style="@style/Widget.Material3.Chip.Filter"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipWarning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/warnings"
-                style="@style/Widget.Material3.Chip.Filter"/>
-        </com.google.android.material.chip.ChipGroup>
 
         <!-- Categories RecyclerView -->
         <TextView
@@ -100,28 +97,10 @@
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
-
-        <!-- Issues RecyclerView -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Issues"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewIssues"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
             android:paddingBottom="80dp"
-            android:nestedScrollingEnabled="false"
-            android:overScrollMode="never" />
+            android:nestedScrollingEnabled="false"/>
     </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

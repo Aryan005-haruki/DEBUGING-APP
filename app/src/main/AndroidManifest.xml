@@ -62,6 +62,16 @@
         <activity
             android:name=".ui.fixsuggestion.FixSuggestionActivity"
             android:exported="false" />
+
+        <!-- Comparison Activity -->
+        <activity
+            android:name=".ui.comparison.ComparisonActivity"
+            android:exported="false" />
+
+        <!-- Comparison Report Activity -->
+        <activity
+            android:name=".ui.comparison.ComparisonReportActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

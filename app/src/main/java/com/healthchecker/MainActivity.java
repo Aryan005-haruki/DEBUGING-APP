@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
+            handleIntent();
         }
 
         // Bottom navigation click handler
@@ -49,6 +49,22 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    protected void onNewIntent(android.content.Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent();
+    }
+
+    private void handleIntent() {
+        int targetFragmentId = getIntent().getIntExtra("target_fragment", -1);
+        if (targetFragmentId != -1) {
+            bottomNav.setSelectedItemId(targetFragmentId);
+        } else {
+            loadFragment(new HomeFragment());
+        }
     }
 
     private void loadFragment(Fragment fragment) {

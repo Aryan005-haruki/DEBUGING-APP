@@ -2,38 +2,21 @@ package com.healthchecker.utils;
 
 public class Constants {
     // ============================================================
-    // API CONFIGURATION - RAILWAY DEPLOYED VERSION
+    // API CONFIGURATION
     // ============================================================
 
-    // DEPLOYED BACKEND (Railway) - Works from anywhere! 🌍
-    // TODO: Replace with your actual Railway URL after deployment
-    public static final String BASE_URL = "https://YOUR-APP-NAME.up.railway.app/api/v1/";
+    // PRODUCTION — Vercel Deployed Backend
+    // After deploying to Vercel, replace the URL below with your Vercel URL:
+    public static final String BASE_URL = "https://backend-rouge-two-23.vercel.app/api/v1/";
 
-    // INSTRUCTIONS:
-    // 1. Deploy backend to Railway (follow RAILWAY_DEPLOYMENT_GUIDE.md)
-    // 2. Get your Railway public URL from Railway dashboard
-    // 3. Replace "YOUR-APP-NAME.up.railway.app" with your actual URL
-    // 4. Make sure "/api/v1/" is at the end
-    // 5. Save this file
-    // 6. Rebuild app in Android Studio (Build → Rebuild Project)
-
-    // EXAMPLE:
-    // public static final String BASE_URL =
-    // "https://health-checker-backend-production.up.railway.app/api/v1/";
-
-    // ============================================================
-    // BACKUP OPTIONS (Uncomment if needed)
-    // ============================================================
-
-    // For Android Emulator (localhost backend)
+    // LOCAL DEVELOPMENT (Android Emulator)
     // public static final String BASE_URL = "http://10.0.2.2:3000/api/v1/";
 
-    // For Physical Device on same WiFi (your PC's IP)
-    // public static final String BASE_URL = "http://192.168.0.103:3000/api/v1/";
+    // LOCAL DEVELOPMENT (Physical Device — use your PC's WiFi IP)
+    // public static final String BASE_URL = "http://192.168.x.x:3000/api/v1/";
 
-    // For Render deployment
-    // public static final String BASE_URL =
-    // "https://health-checker-api.onrender.com/api/v1/";
+    // RAILWAY Deployment (alternative)
+    // public static final String BASE_URL = "https://YOUR-APP.up.railway.app/api/v1/";
 
     // ============================================================
 

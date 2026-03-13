@@ -16,7 +16,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.healthchecker.R;
 import com.healthchecker.data.models.AnalysisResponse;
-import com.healthchecker.ui.report.ReportActivity;
+import com.healthchecker.ui.loading.LoadingActivity;
 import com.healthchecker.utils.Constants;
 import com.healthchecker.utils.FileUtils;
 
@@ -100,50 +100,20 @@ public class ApkUploadActivity extends AppCompatActivity {
     }
 
     private void startAnalysis() {
-        btnAnalyze.setEnabled(false);
-        btnAnalyze.setText("Analyzing...");
-
+        if (selectedFileUri == null) return;
+        
         try {
             File apkFile = FileUtils.getFileFromUri(this, selectedFileUri);
-
-            viewModel.analyzeApk(apkFile).observe(this, result -> {
-                if (result.isLoading()) {
-                    // Show loading state
-                } else if (result.isSuccess()) {
-                    btnAnalyze.setEnabled(true);
-                    btnAnalyze.setText("Analyze APK");
-
-                    AnalysisResponse response = result.getData();
-                    if (response != null && "success".equals(response.getStatus())) {
-                        // Navigate to report
-                        Intent intent = new Intent(this, ReportActivity.class);
-                        intent.putExtra(Constants.EXTRA_ANALYSIS_TYPE, Constants.TYPE_APK);
-
-                        // Pass report data as JSON
-                        Gson gson = new Gson();
-                        String reportJson = gson.toJson(response.getData());
-                        intent.putExtra(Constants.EXTRA_REPORT_DATA, reportJson);
-
-                        startActivity(intent);
-
-                        // Clean up temp file
-                        if (apkFile.exists()) {
-                            apkFile.delete();
-                        }
-                    } else {
-                        Toast.makeText(this, "Analysis failed", Toast.LENGTH_SHORT).show();
-                    }
-                } else if (result.isError()) {
-                    btnAnalyze.setEnabled(true);
-                    btnAnalyze.setText("Analyze APK");
-                    Toast.makeText(this, result.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-
+            
+            // Navigate to LoadingActivity for centralized scanning
+            Intent intent = new Intent(this, LoadingActivity.class);
+            intent.putExtra(Constants.EXTRA_ANALYSIS_TYPE, Constants.TYPE_APK);
+            intent.putExtra("apk_path", apkFile.getAbsolutePath());
+            startActivity(intent);
+            finish();
+            
         } catch (Exception e) {
-            btnAnalyze.setEnabled(true);
-            btnAnalyze.setText("Analyze APK");
-            Toast.makeText(this, "Error reading file: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error preparing file: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

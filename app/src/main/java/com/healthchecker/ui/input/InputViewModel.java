@@ -1,21 +1,24 @@
 package com.healthchecker.ui.input;
 
+import android.app.Application;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.healthchecker.data.models.AnalysisResponse;
 import com.healthchecker.data.repository.AnalysisRepository;
 
 import java.io.File;
 
-public class InputViewModel extends ViewModel {
+public class InputViewModel extends AndroidViewModel {
     private final AnalysisRepository repository;
     private final MutableLiveData<String> url = new MutableLiveData<>();
     private final MutableLiveData<File> selectedApkFile = new MutableLiveData<>();
 
-    public InputViewModel() {
-        this.repository = new AnalysisRepository();
+    public InputViewModel(@NonNull Application application) {
+        super(application);
+        this.repository = new AnalysisRepository(application);
     }
 
     public void setUrl(String url) {

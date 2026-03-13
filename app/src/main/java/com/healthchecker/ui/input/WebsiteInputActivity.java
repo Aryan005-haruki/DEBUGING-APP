@@ -65,38 +65,12 @@ public class WebsiteInputActivity extends AppCompatActivity {
     }
 
     private void startAnalysis(String url) {
-        btnAnalyze.setEnabled(false);
-        btnAnalyze.setText("Analyzing...");
-
-        viewModel.analyzeWebsite(url).observe(this, result -> {
-            if (result.isLoading()) {
-                // Show loading state
-            } else if (result.isSuccess()) {
-                btnAnalyze.setEnabled(true);
-                btnAnalyze.setText("Analyze Website");
-
-                AnalysisResponse response = result.getData();
-                if (response != null && "success".equals(response.getStatus())) {
-                    // Navigate to report
-                    Intent intent = new Intent(this, ReportActivity.class);
-                    intent.putExtra(Constants.EXTRA_ANALYSIS_TYPE, Constants.TYPE_WEBSITE);
-                    intent.putExtra(Constants.EXTRA_URL, url);
-
-                    // Pass report data as JSON
-                    Gson gson = new Gson();
-                    String reportJson = gson.toJson(response.getData());
-                    intent.putExtra(Constants.EXTRA_REPORT_DATA, reportJson);
-
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "Analysis failed", Toast.LENGTH_SHORT).show();
-                }
-            } else if (result.isError()) {
-                btnAnalyze.setEnabled(true);
-                btnAnalyze.setText("Analyze Website");
-                Toast.makeText(this, result.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        // Centralize analysis flow via LoadingActivity
+        Intent intent = new Intent(this, LoadingActivity.class);
+        intent.putExtra(Constants.EXTRA_URL, url);
+        intent.putExtra(Constants.EXTRA_ANALYSIS_TYPE, Constants.TYPE_WEBSITE);
+        startActivity(intent);
+        finish();
     }
 
     @Override

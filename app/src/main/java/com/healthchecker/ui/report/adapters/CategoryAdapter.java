@@ -16,12 +16,47 @@ import com.healthchecker.data.models.AnalysisResponse;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private List<AnalysisResponse.Category> categories = new ArrayList<>();
+    private final OnCategoryClickListener listener;
 
-    public CategoryAdapter(List<AnalysisResponse.Category> categories) {
+    // Category icons for clean visual identification
+    private static final Map<String, String> CATEGORY_ICONS = new HashMap<>();
+    static {
+        CATEGORY_ICONS.put("Performance", "⚡");
+        CATEGORY_ICONS.put("SEO", "🔍");
+        CATEGORY_ICONS.put("Accessibility", "♿");
+        CATEGORY_ICONS.put("Security", "🛡️");
+        CATEGORY_ICONS.put("Code Quality", "💻");
+        CATEGORY_ICONS.put("Broken Links", "🔗");
+        CATEGORY_ICONS.put("DNS & Email Security", "🌐");
+        CATEGORY_ICONS.put("Technology Stack", "🧬");
+        CATEGORY_ICONS.put("Domain Intelligence", "🏢");
+        CATEGORY_ICONS.put("Network Performance", "📊");
+        CATEGORY_ICONS.put("Redirect Chain", "🔄");
+        CATEGORY_ICONS.put("Cookie Security", "🍪");
+        CATEGORY_ICONS.put("Mobile Friendliness", "📱");
+        CATEGORY_ICONS.put("Mixed Content & Integrity", "🔒");
+        CATEGORY_ICONS.put("Blacklist & Reputation", "🛡️");
+        CATEGORY_ICONS.put("Robots & Sitemap", "🤖");
+        CATEGORY_ICONS.put("Social Media Preview", "📱");
+        CATEGORY_ICONS.put("Image Optimization", "🖼️");
+        CATEGORY_ICONS.put("Uptime & Speed", "⏱️");
+        CATEGORY_ICONS.put("Legal & Compliance", "⚖️");
+        CATEGORY_ICONS.put("Structured Data", "🗺️");
+        CATEGORY_ICONS.put("Broken Images", "🧩");
+    }
+
+    public interface OnCategoryClickListener {
+        void onCategoryClick(AnalysisResponse.Category category);
+    }
+
+    public CategoryAdapter(List<AnalysisResponse.Category> categories, OnCategoryClickListener listener) {
+        this.listener = listener;
         if (categories != null) {
             this.categories = categories;
         }
@@ -37,7 +72,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         AnalysisResponse.Category category = categories.get(position);
-        holder.bind(category);
+        holder.bind(category, listener);
     }
 
     @Override
@@ -63,23 +98,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             tvBadge = itemView.findViewById(R.id.tvBadge);
         }
 
-        public void bind(AnalysisResponse.Category category) {
-            tvCategoryName.setText(category.getName());
+        public void bind(AnalysisResponse.Category category, OnCategoryClickListener listener) {
+            // ── Category name with icon ──
+            String icon = CATEGORY_ICONS.getOrDefault(category.getName(), "📋");
+            tvCategoryName.setText(icon + "  " + category.getName());
 
-            // Get score or calculate from issues
+            // ── Score display ──
             Integer score = category.getScore();
             int issueCount = category.getIssues() != null ? category.getIssues().size() : 0;
 
-            // If score is available, show it in circular progress
             if (score != null) {
                 tvScoreCenter.setText(String.valueOf(score));
                 circularProgress.setProgress((float) score);
-
-                // Set color based on score
                 int color = getScoreColor(score);
                 circularProgress.setProgressBarColor(color);
             } else {
-                // No score - show based on issues
                 if (issueCount == 0) {
                     tvScoreCenter.setText("✓");
                     circularProgress.setProgress(100f);
@@ -87,46 +120,49 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                             ContextCompat.getColor(itemView.getContext(), R.color.vibrant_success));
                 } else {
                     tvScoreCenter.setText(String.valueOf(issueCount));
-                    circularProgress.setProgress(0f);
+                    circularProgress.setProgress(Math.max(0, 100 - issueCount * 15));
                     circularProgress.setProgressBarColor(
                             ContextCompat.getColor(itemView.getContext(), R.color.vibrant_critical));
                 }
             }
 
-            // Show issue count
+            // ── Issue count label ──
             if (issueCount > 0) {
                 tvIssueCount.setVisibility(View.VISIBLE);
                 tvIssueCount.setText(issueCount + " issue" + (issueCount > 1 ? "s" : "") + " found");
+                tvIssueCount.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.text_premium_secondary));
 
-                // Show badge for critical categories
+                // Badge
                 if (issueCount >= 5) {
                     tvBadge.setVisibility(View.VISIBLE);
                     tvBadge.setText("HIGH");
                     tvBadge.setBackgroundResource(R.drawable.bg_badge_high);
                 } else if (issueCount >= 2) {
                     tvBadge.setVisibility(View.VISIBLE);
-                    tvBadge.setText("MEDIUM");
+                    tvBadge.setText("MED");
                     tvBadge.setBackgroundResource(R.drawable.bg_badge_medium);
                 } else {
                     tvBadge.setVisibility(View.GONE);
                 }
             } else {
                 tvIssueCount.setVisibility(View.VISIBLE);
-                tvIssueCount.setText("✓ All checks passed");
+                tvIssueCount.setText("✓ All clear");
+                tvIssueCount.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.vibrant_success));
                 tvBadge.setVisibility(View.GONE);
             }
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onCategoryClick(category);
+                }
+            });
         }
 
         private int getScoreColor(int score) {
-            if (score >= 90) {
-                return ContextCompat.getColor(itemView.getContext(), R.color.progress_excellent);
-            } else if (score >= 70) {
-                return ContextCompat.getColor(itemView.getContext(), R.color.progress_good);
-            } else if (score >= 50) {
-                return ContextCompat.getColor(itemView.getContext(), R.color.progress_fair);
-            } else {
-                return ContextCompat.getColor(itemView.getContext(), R.color.progress_poor);
-            }
+            if (score >= 90) return ContextCompat.getColor(itemView.getContext(), R.color.progress_excellent);
+            if (score >= 70) return ContextCompat.getColor(itemView.getContext(), R.color.progress_good);
+            if (score >= 50) return ContextCompat.getColor(itemView.getContext(), R.color.progress_fair);
+            return ContextCompat.getColor(itemView.getContext(), R.color.progress_poor);
         }
     }
 }

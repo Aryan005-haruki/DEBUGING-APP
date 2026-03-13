@@ -1,22 +1,53 @@
 package com.healthchecker.ui.report;
 
+import android.app.Application;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
+import com.healthchecker.data.local.ScanReportEntity;
 import com.healthchecker.data.models.AnalysisResponse;
 import com.healthchecker.data.models.Issue;
+import com.healthchecker.data.repository.AnalysisRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportViewModel extends ViewModel {
+public class ReportViewModel extends AndroidViewModel {
+    private final AnalysisRepository repository;
     private final MutableLiveData<AnalysisResponse.ReportData> reportData = new MutableLiveData<>();
+    private final MutableLiveData<AnalysisResponse.ReportData> previousReportData = new MutableLiveData<>();
     private final MutableLiveData<String> selectedCategory = new MutableLiveData<>();
     private final MutableLiveData<String> selectedSeverityFilter = new MutableLiveData<>("ALL");
 
+    public ReportViewModel(@NonNull Application application) {
+        super(application);
+        this.repository = new AnalysisRepository(application);
+    }
+
     public void setReportData(AnalysisResponse.ReportData data) {
         this.reportData.setValue(data);
+        fetchPreviousReport(data);
+    }
+
+    private void fetchPreviousReport(AnalysisResponse.ReportData data) {
+        String target = data.getUrl() != null ? data.getUrl() : data.getPackageName();
+        if (target == null) return;
+
+        new Thread(() -> {
+            ScanReportEntity prevEntity = repository.getPreviousReportForTarget(target);
+            if (prevEntity != null) {
+                com.healthchecker.data.models.AnalysisResponse.ReportData prevData = 
+                    new com.google.gson.Gson().fromJson(prevEntity.getReportJson(), 
+                    com.healthchecker.data.models.AnalysisResponse.ReportData.class);
+                previousReportData.postValue(prevData);
+            }
+        }).start();
+    }
+
+    public LiveData<AnalysisResponse.ReportData> getPreviousReportData() {
+        return previousReportData;
     }
 
     public LiveData<AnalysisResponse.ReportData> getReportData() {

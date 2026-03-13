@@ -9,10 +9,16 @@
     <!-- Search Bar -->
     <include layout="@layout/component_search_bar" />
 
-    <!-- Issues RecyclerView -->
+    <!-- Issues List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewIssues"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:padding="8dp"/>
+
+    <!-- Empty State -->
+    <include
+        android:id="@+id/layoutEmptyState"
+        layout="@layout/component_empty_state" />
 </LinearLayout>
