@@ -25,24 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <!-- Disclaimer Activity (OLD LAUNCHER - Now secondary) -->
-        <activity
-            android:name=".ui.disclaimer.DisclaimerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HealthChecker.NoActionBar">
-        </activity>
-        
-        <!-- Home Activity -->
-        <activity
-            android:name=".ui.home.HomeActivity"
-            android:exported="false" />
-        
-        <!-- Website Input Activity -->
-        <activity
-            android:name=".ui.input.WebsiteInputActivity"
-            android:exported="false" />
-        
+
         <!-- APK Upload Activity -->
         <activity
             android:name=".ui.input.ApkUploadActivity"
